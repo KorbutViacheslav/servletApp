@@ -6,23 +6,23 @@ import java.util.List;
 
 public class EmployeeRepository {
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         getConnection();
 
         Employee employee = new Employee();
 
-        employee.setName("oleg");
-        employee.setEmail(" ");
-        employee.setCountry(" ");
+        employee.setName("sam");
+        employee.setEmail("new@gmail.com");
+        employee.setCountry("canada");
         save(employee);
-    }*/
+    }
 
     public static Connection getConnection() {
 
         Connection connection = null;
         String url = "jdbc:postgresql://localhost:5432/employee";
         String user = "postgres";
-        String password = "postgres";
+        String password = "12345";
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -41,7 +41,7 @@ public class EmployeeRepository {
         int status = 0;
         try {
             Connection connection = EmployeeRepository.getConnection();
-            PreparedStatement ps = connection.prepareStatement("insert into users(name,email,country) values (?,?,?)");
+            PreparedStatement ps = connection.prepareStatement("insert into users.users(name,email,country) values (?,?,?)");
             ps.setString(1, employee.getName());
             ps.setString(2, employee.getEmail());
             ps.setString(3, employee.getCountry());
@@ -61,7 +61,7 @@ public class EmployeeRepository {
 
         try {
             Connection connection = EmployeeRepository.getConnection();
-            PreparedStatement ps = connection.prepareStatement("update users set name=?,email=?,country=? where id=?");
+            PreparedStatement ps = connection.prepareStatement("update users.users set name=?,email=?,country=? where id=?");
             ps.setString(1, employee.getName());
             ps.setString(2, employee.getEmail());
             ps.setString(3, employee.getCountry());
@@ -82,7 +82,7 @@ public class EmployeeRepository {
 
         try {
             Connection connection = EmployeeRepository.getConnection();
-            PreparedStatement ps = connection.prepareStatement("delete from users where id=?");
+            PreparedStatement ps = connection.prepareStatement("delete from users.users where id=?");
             ps.setInt(1, id);
             status = ps.executeUpdate();
 
@@ -100,7 +100,7 @@ public class EmployeeRepository {
 
         try {
             Connection connection = EmployeeRepository.getConnection();
-            PreparedStatement ps = connection.prepareStatement("select * from users where id=?");
+            PreparedStatement ps = connection.prepareStatement("select * from users.users where id=?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -123,7 +123,7 @@ public class EmployeeRepository {
 
         try {
             Connection connection = EmployeeRepository.getConnection();
-            PreparedStatement ps = connection.prepareStatement("select * from users");
+            PreparedStatement ps = connection.prepareStatement("select * from users.users");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
