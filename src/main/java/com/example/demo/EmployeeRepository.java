@@ -1,33 +1,37 @@
 package com.example.demo;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class EmployeeRepository {
-
-    public static void main(String[] args) {
-        getConnection();
-
-        Employee employee = new Employee();
-
-        employee.setName("sam");
-        employee.setEmail("new@gmail.com");
-        employee.setCountry("canada");
-        save(employee);
-    }
-
+/**The code reads the data from the file "application.properties",
+ which contains configuration parameters for connection to the database,
+ and loads them into an object type Properties.
+Properties and used to install a database connection.
+This code provides storage of the connection configuration with the database in a separate file.
+ Used "try-with-resources" to automatically close the connection to the database after performing operations with them.*/
     public static Connection getConnection() {
+        Properties props = new Properties();
+        Connection connection=null;
+        try (InputStream input = new FileInputStream("application.properties")) {
+            props.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
-        Connection connection = null;
-        String url = "jdbc:postgresql://localhost:5432/employee";
-        String user = "postgres";
-        String password = "12345";
+        String url = props.getProperty("database.url");
+        String user = props.getProperty("database.user");
+        String password = props.getProperty("database.password");
 
-        try {
-            connection = DriverManager.getConnection(url, user, password);
-            if (connection != null) {
+        try (Connection connectionDriver = DriverManager.getConnection(url, user, password)){
+            if (connectionDriver != null) {
                 System.out.println("Connected to the PostgreSQL server successfully.");
+                connection=connectionDriver;
             } else {
                 System.out.println("Failed to make connection!");
             }
@@ -39,16 +43,14 @@ public class EmployeeRepository {
 
     public static int save(Employee employee) {
         int status = 0;
-        try {
-            Connection connection = EmployeeRepository.getConnection();
+        try (Connection connection = EmployeeRepository.getConnection()){
+
             PreparedStatement ps = connection.prepareStatement("insert into users.users(name,email,country) values (?,?,?)");
             ps.setString(1, employee.getName());
             ps.setString(2, employee.getEmail());
             ps.setString(3, employee.getCountry());
 
             status = ps.executeUpdate();
-            connection.close();
-
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -59,16 +61,15 @@ public class EmployeeRepository {
 
         int status = 0;
 
-        try {
-            Connection connection = EmployeeRepository.getConnection();
-            PreparedStatement ps = connection.prepareStatement("update users.users set name=?,email=?,country=? where id=?");
+        try (Connection connection = EmployeeRepository.getConnection();
+             PreparedStatement ps = connection.prepareStatement("update users.users set name=?,email=?,country=? where id=?")){
+
             ps.setString(1, employee.getName());
             ps.setString(2, employee.getEmail());
             ps.setString(3, employee.getCountry());
             ps.setInt(4, employee.getId());
 
             status = ps.executeUpdate();
-            connection.close();
 
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
@@ -80,13 +81,11 @@ public class EmployeeRepository {
 
         int status = 0;
 
-        try {
-            Connection connection = EmployeeRepository.getConnection();
-            PreparedStatement ps = connection.prepareStatement("delete from users.users where id=?");
+        try (Connection connection = EmployeeRepository.getConnection();
+             PreparedStatement ps = connection.prepareStatement("delete from users.users where id=?")){
+
             ps.setInt(1, id);
             status = ps.executeUpdate();
-
-            connection.close();
 
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -98,9 +97,9 @@ public class EmployeeRepository {
 
         Employee employee = new Employee();
 
-        try {
-            Connection connection = EmployeeRepository.getConnection();
-            PreparedStatement ps = connection.prepareStatement("select * from users.users where id=?");
+        try (Connection connection = EmployeeRepository.getConnection();
+             PreparedStatement ps = connection.prepareStatement("select * from users.users where id=?")){
+
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -109,7 +108,6 @@ public class EmployeeRepository {
                 employee.setEmail(rs.getString(3));
                 employee.setCountry(rs.getString(4));
             }
-            connection.close();
 
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -121,13 +119,11 @@ public class EmployeeRepository {
 
         List<Employee> listEmployees = new ArrayList<>();
 
-        try {
-            Connection connection = EmployeeRepository.getConnection();
-            PreparedStatement ps = connection.prepareStatement("select * from users.users");
+        try (Connection connection = EmployeeRepository.getConnection();
+        PreparedStatement ps = connection.prepareStatement("select * from users.users")){
+
             ResultSet rs = ps.executeQuery();
-
             while (rs.next()) {
-
                 Employee employee = new Employee();
 
                 employee.setId(rs.getInt(1));
@@ -137,8 +133,6 @@ public class EmployeeRepository {
 
                 listEmployees.add(employee);
             }
-            connection.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

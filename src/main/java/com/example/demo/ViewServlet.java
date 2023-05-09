@@ -13,17 +13,18 @@ import java.util.List;
 
 @WebServlet("/viewServlet")
 public class ViewServlet extends HttpServlet {
-
+/**Used the foreach method to output the list of employees.
+ * Also, to automatically close PrintWriter, used try-with-resources.*/
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
 
         List<Employee> list = EmployeeRepository.getAllEmployees();
 
-        for (Employee employee : list) {
-            out.print(employee);
+        try (PrintWriter out = response.getWriter()) {
+            list.forEach(out::println);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        out.close();
     }
 }
