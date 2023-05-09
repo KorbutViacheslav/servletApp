@@ -1,4 +1,6 @@
-package com.example.demo;
+package com.example.demo.repository;
+
+import com.example.demo.entity.Employee;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,15 +11,18 @@ import java.util.List;
 import java.util.Properties;
 
 public class EmployeeRepository {
-/**The code reads the data from the file "application.properties",
- which contains configuration parameters for connection to the database,
- and loads them into an object type Properties.
-Properties and used to install a database connection.
-This code provides storage of the connection configuration with the database in a separate file.
- Used "try-with-resources" to automatically close the connection to the database after performing operations with them.*/
+    /**
+     * @author Viacheslav Korbut
+     * The code reads the data from the file "application.properties",
+     * which contains configuration parameters for connection to the database,
+     * and loads them into an object type Properties.
+     * Properties and used to install a database connection.
+     * This code provides storage of the connection configuration with the database in a separate file.
+     * Used "try-with-resources" to automatically close the connection to the database after performing operations with them.
+     */
     public static Connection getConnection() {
         Properties props = new Properties();
-        Connection connection=null;
+        Connection connection = null;
         try (InputStream input = new FileInputStream("application.properties")) {
             props.load(input);
         } catch (IOException ex) {
@@ -28,10 +33,10 @@ This code provides storage of the connection configuration with the database in 
         String user = props.getProperty("database.user");
         String password = props.getProperty("database.password");
 
-        try (Connection connectionDriver = DriverManager.getConnection(url, user, password)){
+        try (Connection connectionDriver = DriverManager.getConnection(url, user, password)) {
             if (connectionDriver != null) {
                 System.out.println("Connected to the PostgreSQL server successfully.");
-                connection=connectionDriver;
+                connection = connectionDriver;
             } else {
                 System.out.println("Failed to make connection!");
             }
@@ -43,9 +48,10 @@ This code provides storage of the connection configuration with the database in 
 
     public static int save(Employee employee) {
         int status = 0;
-        try (Connection connection = EmployeeRepository.getConnection()){
+        try (Connection connection = EmployeeRepository.getConnection()) {
 
-            PreparedStatement ps = connection.prepareStatement("insert into users.users(name,email,country) values (?,?,?)");
+            PreparedStatement ps = connection
+                    .prepareStatement("insert into users.users(name,email,country) values (?,?,?)");
             ps.setString(1, employee.getName());
             ps.setString(2, employee.getEmail());
             ps.setString(3, employee.getCountry());
@@ -53,6 +59,11 @@ This code provides storage of the connection configuration with the database in 
             status = ps.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
+        }
+        if (status > 0) {
+            System.out.println("Record saved successfully!");
+        } else {
+            System.out.println("Sorry! unable to save record");
         }
         return status;
     }
@@ -62,7 +73,8 @@ This code provides storage of the connection configuration with the database in 
         int status = 0;
 
         try (Connection connection = EmployeeRepository.getConnection();
-             PreparedStatement ps = connection.prepareStatement("update users.users set name=?,email=?,country=? where id=?")){
+             PreparedStatement ps = connection
+                     .prepareStatement("update users.users set name=?,email=?,country=? where id=?")) {
 
             ps.setString(1, employee.getName());
             ps.setString(2, employee.getEmail());
@@ -74,6 +86,11 @@ This code provides storage of the connection configuration with the database in 
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
+        if (status > 0) {
+            System.out.println("User with id=" + employee.getId() + " uploaded");
+        } else {
+            System.out.println("Sorry! unable to save record");
+        }
         return status;
     }
 
@@ -82,7 +99,8 @@ This code provides storage of the connection configuration with the database in 
         int status = 0;
 
         try (Connection connection = EmployeeRepository.getConnection();
-             PreparedStatement ps = connection.prepareStatement("delete from users.users where id=?")){
+             PreparedStatement ps = connection
+                     .prepareStatement("delete from users.users where id=?")) {
 
             ps.setInt(1, id);
             status = ps.executeUpdate();
@@ -98,7 +116,8 @@ This code provides storage of the connection configuration with the database in 
         Employee employee = new Employee();
 
         try (Connection connection = EmployeeRepository.getConnection();
-             PreparedStatement ps = connection.prepareStatement("select * from users.users where id=?")){
+             PreparedStatement ps = connection
+                     .prepareStatement("select * from users.users where id=?")) {
 
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -120,7 +139,8 @@ This code provides storage of the connection configuration with the database in 
         List<Employee> listEmployees = new ArrayList<>();
 
         try (Connection connection = EmployeeRepository.getConnection();
-        PreparedStatement ps = connection.prepareStatement("select * from users.users")){
+             PreparedStatement ps = connection
+                     .prepareStatement("select * from users.users")) {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

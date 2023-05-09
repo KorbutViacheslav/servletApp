@@ -1,6 +1,7 @@
-package com.example.demo;
+package com.example.demo.servlets;
 
-
+import com.example.demo.entity.Employee;
+import com.example.demo.repository.EmployeeRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,8 +14,11 @@ import java.util.List;
 
 @WebServlet("/viewServlet")
 public class ViewServlet extends HttpServlet {
-/**Used the foreach method to output the list of employees.
- * Also, to automatically close PrintWriter, used try-with-resources.*/
+    /**
+     * @author Viacheslav Korbut
+     * Used the foreach method to output the list of employees.
+     * Also, to automatically close PrintWriter, used try-with-resources.
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html");

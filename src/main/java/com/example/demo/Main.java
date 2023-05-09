@@ -1,7 +1,9 @@
 package com.example.demo;
 
-import static com.example.demo.EmployeeRepository.getConnection;
-import static com.example.demo.EmployeeRepository.save;
+import com.example.demo.entity.Employee;
+
+import static com.example.demo.repository.EmployeeRepository.getConnection;
+import static com.example.demo.repository.EmployeeRepository.save;
 
 public class Main {
     public static void main(String[] args) {
