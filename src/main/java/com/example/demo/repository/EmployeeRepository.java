@@ -1,14 +1,11 @@
 package com.example.demo.repository;
 
+import com.example.demo.config.DatabaseConfigInit;
 import com.example.demo.entity.Employee;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class EmployeeRepository {
     /**
@@ -21,22 +18,16 @@ public class EmployeeRepository {
      * Used "try-with-resources" to automatically close the connection to the database after performing operations with them.
      */
     public static Connection getConnection() {
-        Properties props = new Properties();
         Connection connection = null;
-        try (InputStream input = new FileInputStream("application.properties")) {
-            props.load(input);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
 
-        String url = props.getProperty("database.url");
-        String user = props.getProperty("database.user");
-        String password = props.getProperty("database.password");
+        String url = DatabaseConfigInit.getUrl();
+        String user = DatabaseConfigInit.getUser();
+        String password = DatabaseConfigInit.getPassword();
 
-        try (Connection connectionDriver = DriverManager.getConnection(url, user, password)) {
-            if (connectionDriver != null) {
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+            if (connection != null) {
                 System.out.println("Connected to the PostgreSQL server successfully.");
-                connection = connectionDriver;
             } else {
                 System.out.println("Failed to make connection!");
             }
@@ -48,10 +39,10 @@ public class EmployeeRepository {
 
     public static int save(Employee employee) {
         int status = 0;
-        try (Connection connection = EmployeeRepository.getConnection()) {
+        try (Connection connection = EmployeeRepository.getConnection();
+             PreparedStatement ps = connection
+                     .prepareStatement("insert into users.users(name,email,country) values (?,?,?)")) {
 
-            PreparedStatement ps = connection
-                    .prepareStatement("insert into users.users(name,email,country) values (?,?,?)");
             ps.setString(1, employee.getName());
             ps.setString(2, employee.getEmail());
             ps.setString(3, employee.getCountry());
@@ -69,7 +60,6 @@ public class EmployeeRepository {
     }
 
     public static int update(Employee employee) {
-
         int status = 0;
 
         try (Connection connection = EmployeeRepository.getConnection();
@@ -95,7 +85,6 @@ public class EmployeeRepository {
     }
 
     public static int delete(int id) {
-
         int status = 0;
 
         try (Connection connection = EmployeeRepository.getConnection();
@@ -112,7 +101,6 @@ public class EmployeeRepository {
     }
 
     public static Employee getEmployeeById(int id) {
-
         Employee employee = new Employee();
 
         try (Connection connection = EmployeeRepository.getConnection();
@@ -135,7 +123,6 @@ public class EmployeeRepository {
     }
 
     public static List<Employee> getAllEmployees() {
-
         List<Employee> listEmployees = new ArrayList<>();
 
         try (Connection connection = EmployeeRepository.getConnection();

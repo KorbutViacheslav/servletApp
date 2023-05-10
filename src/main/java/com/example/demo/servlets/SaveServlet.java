@@ -1,6 +1,7 @@
 package com.example.demo.servlets;
 
 import com.example.demo.entity.Employee;
+import com.example.demo.repository.EmployeeRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,5 +31,8 @@ public class SaveServlet extends HttpServlet {
         employee.setName(name);
         employee.setEmail(email);
         employee.setCountry(country);
+
+        EmployeeRepository.save(employee);
+        response.sendRedirect("viewServlet");
     }
 }
