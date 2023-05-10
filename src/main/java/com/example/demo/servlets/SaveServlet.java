@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet("/saveServlet")
 public class SaveServlet extends HttpServlet {
@@ -18,7 +19,7 @@ public class SaveServlet extends HttpServlet {
      */
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException{
 
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
@@ -33,6 +34,11 @@ public class SaveServlet extends HttpServlet {
         employee.setCountry(country);
 
         EmployeeRepository.save(employee);
-        response.sendRedirect("viewServlet");
+
+        try (PrintWriter out=response.getWriter()){
+            out.print("You created new user: "+employee);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

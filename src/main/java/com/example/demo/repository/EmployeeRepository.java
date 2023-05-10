@@ -51,11 +51,6 @@ public class EmployeeRepository {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        if (status > 0) {
-            System.out.println("Record saved successfully!");
-        } else {
-            System.out.println("Sorry! unable to save record");
-        }
         return status;
     }
 
@@ -75,11 +70,6 @@ public class EmployeeRepository {
 
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
-        }
-        if (status > 0) {
-            System.out.println("User with id=" + employee.getId() + " uploaded");
-        } else {
-            System.out.println("Sorry! unable to save record");
         }
         return status;
     }

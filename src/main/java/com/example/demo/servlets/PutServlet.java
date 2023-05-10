@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet("/putServlet")
 public class PutServlet extends HttpServlet {
@@ -19,9 +20,10 @@ public class PutServlet extends HttpServlet {
      */
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
         response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
 
         String sid = request.getParameter("id");
         int id = Integer.parseInt(sid);
@@ -36,8 +38,15 @@ public class PutServlet extends HttpServlet {
         employee.setEmail(email);
         employee.setCountry(country);
 
-        EmployeeRepository.update(employee);
-        response.sendRedirect("viewServlet");
-
+        int status = EmployeeRepository.update(employee);
+        try (PrintWriter out = response.getWriter()) {
+            if (status > 0) {
+                out.print("You update user from id: " + id + " to user: " + employee);
+            } else {
+                out.print("Such a user does not exist!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

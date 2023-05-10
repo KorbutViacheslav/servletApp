@@ -4,29 +4,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class DatabaseConfigInit {
-    private static Properties properties;
+public final class DatabaseConfigInit {
+    private static final Properties PROPERTIES;
 
     static {
-        properties = new Properties();
+        PROPERTIES = new Properties();
         try (InputStream inputStream = DatabaseConfigInit.class
                 .getClassLoader()
                 .getResourceAsStream("application.properties")) {
-            properties.load(inputStream);
+            PROPERTIES.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static String getUrl() {
-        return properties.getProperty("database.url");
+        return PROPERTIES.getProperty("database.url");
     }
 
     public static String getUser() {
-        return properties.getProperty("database.user");
+        return PROPERTIES.getProperty("database.user");
     }
 
     public static String getPassword() {
-        return properties.getProperty("database.password");
+        return PROPERTIES.getProperty("database.password");
     }
 }

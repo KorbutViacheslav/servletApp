@@ -19,7 +19,7 @@ public class ViewServlet extends HttpServlet {
      * Used the foreach method to output the list of employees.
      * Also, to automatically close PrintWriter, used try-with-resources.
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
         response.setContentType("text/html");
 
