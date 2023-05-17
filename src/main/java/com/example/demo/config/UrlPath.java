@@ -3,7 +3,7 @@ package com.example.demo.config;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class UrlPath {
+public final class UrlPath {
     public static final String LOGIN = "/demo/loginServlet";
     public static final String LOGOUT = "/demo/logoutServlet";
     public static final String DELETE = "/demo/deleteServlet";

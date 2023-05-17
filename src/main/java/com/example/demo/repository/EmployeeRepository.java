@@ -59,12 +59,13 @@ public class EmployeeRepository {
 
         try (Connection connection = EmployeeRepository.getConnection();
              PreparedStatement ps = connection
-                     .prepareStatement("update users.users set name=?,email=?,country=? where id=?")) {
+                     .prepareStatement("update users.users set name=?,email=?,country=? where id=? and deleted=?")) {
 
             ps.setString(1, employee.getName());
             ps.setString(2, employee.getEmail());
             ps.setString(3, employee.getCountry());
             ps.setInt(4, employee.getId());
+            ps.setBoolean(5, false);
 
             status = ps.executeUpdate();
 
@@ -79,9 +80,10 @@ public class EmployeeRepository {
 
         try (Connection connection = EmployeeRepository.getConnection();
              PreparedStatement ps = connection
-                     .prepareStatement("delete from users.users where id=?")) {
+                     .prepareStatement("update users.users set deleted=? where id=?")) {
 
-            ps.setInt(1, id);
+            ps.setBoolean(1, true);
+            ps.setInt(2, id);
             status = ps.executeUpdate();
 
         } catch (SQLException exception) {
@@ -95,9 +97,10 @@ public class EmployeeRepository {
 
         try (Connection connection = EmployeeRepository.getConnection();
              PreparedStatement ps = connection
-                     .prepareStatement("select * from users.users where id=?")) {
+                     .prepareStatement("select * from users.users where id=? and deleted=?")) {
 
             ps.setInt(1, id);
+            ps.setBoolean(2, false);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 employee.setId(rs.getInt(1));
@@ -117,7 +120,9 @@ public class EmployeeRepository {
 
         try (Connection connection = EmployeeRepository.getConnection();
              PreparedStatement ps = connection
-                     .prepareStatement("select * from users.users")) {
+                     .prepareStatement("select * from users.users where deleted=?")) {
+
+            ps.setBoolean(1, false);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

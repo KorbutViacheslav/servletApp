@@ -2,6 +2,7 @@ package com.example.demo;
 
 
 import com.example.demo.entity.Employee;
+import com.example.demo.repository.EmployeeRepository;
 
 import java.util.Set;
 
@@ -19,15 +20,10 @@ public class Main {
         employee.setCountry("canada");
         save(employee);*/
 
-        final Set<String> PUBLIC_PATH = Set.of("demo/logoutServlet",
-                "demo/deleteServlet",
-                "demo/saveServlet",
-                /*"demo/viewByIDServlet",*/
-                "demo/loginServlet",
-                "demo/viewServlet");
-        String uri="demo/saveServle";
-        String a= PUBLIC_PATH.stream().filter(uri::startsWith).findFirst().orElse("");
-        System.out.println(a);
-        System.out.println(uri);
+        getConnection();
+        EmployeeRepository.getAllEmployees().forEach(System.out::println);
+        EmployeeRepository.delete(21);
+        EmployeeRepository.getAllEmployees().forEach(System.out::println);
+
     }
 }
