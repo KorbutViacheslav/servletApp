@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 /**
  * Servlet implementation class LogoutServlet
  */
-@WebServlet("/LogoutServlet")
+@WebServlet("/logoutServlet")
 public class LogoutServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -27,9 +27,7 @@ public class LogoutServlet extends HttpServlet {
         }
         HttpSession session = request.getSession(false);
         System.out.println("User=" + session.getAttribute("user"));
-        if (session != null) {
-            session.invalidate();
-        }
+        session.invalidate();
         PrintWriter out = response.getWriter();
         out.println("Either user name or password is wrong!");
     }

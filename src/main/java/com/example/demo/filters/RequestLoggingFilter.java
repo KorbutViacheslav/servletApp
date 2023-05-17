@@ -40,8 +40,4 @@ public class RequestLoggingFilter implements Filter {
         // pass the request along the filter chain
         chain.doFilter(request, response);
     }
-
-    public void destroy() {
-    }
-
 }

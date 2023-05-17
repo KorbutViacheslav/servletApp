@@ -6,6 +6,8 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Servlet implementation class LoginServlet
@@ -21,21 +23,21 @@ public class LoginServlet extends HttpServlet {
         String user = request.getParameter("user");
         String pwd = request.getParameter("pwd");
         // Это значение наших параметров
-        String userID = "admin";
-        String password = "password";
+        Map<String,String> admin=new HashMap<>();
+        admin.put("admin","password");
+        PrintWriter out = response.getWriter();
 
-        if (userID.equals(user) && password.equals(pwd)) {
-            HttpSession session = request.getSession();
-            session.setAttribute("user", "user");
+        if (admin.containsKey(user) && admin.get(user).equals(pwd)) {
+            /*HttpSession session = request.getSession(true);
+            session.setAttribute("user", user);
             //setting session to expiry in 30 mins
-            session.setMaxInactiveInterval(30 * 60);
+            int sessionTimeoutInSeconds = 30 * 60;
+            session.setMaxInactiveInterval(sessionTimeoutInSeconds);*/
             Cookie userName = new Cookie("user", user);
-            userName.setMaxAge(30 * 60);
+            userName.setMaxAge(30*60);
             response.addCookie(userName);
-            PrintWriter out = response.getWriter();
             out.println("Welcome back to the team, " + user + "!");
         } else {
-            PrintWriter out = response.getWriter();
             out.println("Either user name or password is wrong!");
         }
     }
