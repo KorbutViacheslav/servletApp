@@ -11,13 +11,15 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+/**
+ * @author Viacheslav Korbut
+ * Remove PrintWriter.
+ * hw_3 added new method updateOrNo().
+ */
 
 @WebServlet("/putServlet")
 public class PutServlet extends HttpServlet {
-    /**
-     * @author Viacheslav Korbut
-     * Remove PrintWriter.
-     */
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -39,6 +41,11 @@ public class PutServlet extends HttpServlet {
         employee.setCountry(country);
 
         int status = EmployeeRepository.update(employee);
+
+        updateOrNo(response, id, employee, status);
+    }
+
+    private static void updateOrNo(HttpServletResponse response, int id, Employee employee, int status) {
         try (PrintWriter out = response.getWriter()) {
             if (status > 0) {
                 out.print("You update user from id: " + id + " to user: " + employee);

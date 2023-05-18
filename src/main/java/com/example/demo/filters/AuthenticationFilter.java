@@ -1,6 +1,5 @@
 package com.example.demo.filters;
 
-import com.example.demo.config.UrlPath;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,9 +12,9 @@ import java.util.Set;
 
 import static com.example.demo.config.UrlPath.*;
 
-@WebFilter("/*")
+@WebFilter("/demo/*")
 public class AuthenticationFilter implements Filter {
-    public static final Set<String> PUBLIC_PATH = Set.of(LOGIN,LOGOUT,DELETE,SAVE,VIEW_ALL,VIEW_ID);
+    public static final Set<String> PUBLIC_PATH = Set.of(LOGIN,LOGOUT,DELETE,SAVE,VIEW_ALL,VIEW_ID,PUT);
 
     private ServletContext context;
 
@@ -35,6 +34,10 @@ public class AuthenticationFilter implements Filter {
 
         HttpSession session = req.getSession(false);
 
+        accessOrNo(request, response, chain, res, uri, session);
+    }
+
+    private void accessOrNo(ServletRequest request, ServletResponse response, FilterChain chain, HttpServletResponse res, String uri, HttpSession session) throws IOException, ServletException {
         if (session == null && !PUBLIC_PATH.contains(uri)) {
             this.context.log("<<< Unauthorized access request");
             PrintWriter out = res.getWriter();

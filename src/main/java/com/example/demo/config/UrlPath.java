@@ -10,4 +10,5 @@ public final class UrlPath {
     public static final String SAVE = "/demo/saveServlet";
     public static final String VIEW_ALL = "/demo/viewServlet";
     public static final String VIEW_ID = "/demo/viewByIDServlet";
+    public static final String PUT = "/demo/putServlet";
 }
