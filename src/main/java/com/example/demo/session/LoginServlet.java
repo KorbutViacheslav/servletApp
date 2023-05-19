@@ -19,22 +19,23 @@ public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // Это название 2-х параметров, которые мы передаем
         String user = request.getParameter("user");
         String pwd = request.getParameter("pwd");
-        // Это значение наших параметров
-        Map<String,String> admin=new HashMap<>();
-        admin.put("admin","password");
-        PrintWriter out = response.getWriter();
 
+        Map<String, String> admin = new HashMap<>();
+        admin.put("admin", "password");
+
+        logOrNo(request, response, user, pwd, admin);
+    }
+    private static void logOrNo(HttpServletRequest request, HttpServletResponse response, String user, String pwd, Map<String, String> admin) throws IOException {
+        PrintWriter out = response.getWriter();
         if (admin.containsKey(user) && admin.get(user).equals(pwd)) {
-            /*HttpSession session = request.getSession(true);
+            int timeoutInSeconds = 30 * 60;
+            HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
-            //setting session to expiry in 30 mins
-            int sessionTimeoutInSeconds = 30 * 60;
-            session.setMaxInactiveInterval(sessionTimeoutInSeconds);*/
+            session.setMaxInactiveInterval(timeoutInSeconds);
             Cookie userName = new Cookie("user", user);
-            userName.setMaxAge(30*60);
+            userName.setMaxAge(30 * 60);
             response.addCookie(userName);
             out.println("Welcome back to the team, " + user + "!");
         } else {

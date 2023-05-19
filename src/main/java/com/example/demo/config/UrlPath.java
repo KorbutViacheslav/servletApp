@@ -4,11 +4,11 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class UrlPath {
-    public static final String LOGIN = "/demo/loginServlet";
-    public static final String LOGOUT = "/demo/logoutServlet";
-    public static final String DELETE = "/demo/deleteServlet";
-    public static final String SAVE = "/demo/saveServlet";
-    public static final String VIEW_ALL = "/demo/viewServlet";
-    public static final String VIEW_ID = "/demo/viewByIDServlet";
-    public static final String PUT = "/demo/putServlet";
+    public String LOGIN = "/demo/loginServlet";
+    public String LOGOUT = "/demo/logoutServlet";
+    public String DELETE = "/demo/deleteServlet";
+    public String SAVE = "/demo/saveServlet";
+    public String VIEW_ALL = "/demo/viewServlet";
+    public String VIEW_ID = "/demo/viewByIDServlet";
+    public String PUT = "/demo/putServlet";
 }

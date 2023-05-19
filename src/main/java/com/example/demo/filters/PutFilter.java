@@ -13,15 +13,12 @@ import java.io.IOException;
  */
 @WebFilter("/putServlet")
 public class PutFilter implements Filter {
-
     private ServletContext context;
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.context = filterConfig.getServletContext();
         this.context.log(">>> LoggingFilter initialized");
     }
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
